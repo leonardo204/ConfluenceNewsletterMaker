@@ -60,7 +60,7 @@ python app.py
 
 5. 웹 브라우저에서 접속
 ```
-http://localhost:5000
+http://localhost:5050
 ```
 
 ## 사용 방법
