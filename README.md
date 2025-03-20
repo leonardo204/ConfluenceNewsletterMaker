@@ -82,6 +82,16 @@ Confluence 페이지 ID를 입력하면 해당 페이지의 내용을 요약하�
 
 5. 생성된 뉴스레터 내용을 복사하여 Outlook 또는 다른 메일 클라이언트에 붙여넣기
 
+## 실행 모습
+   - 뉴스레터 입력 화면
+   
+     <img width="961" alt="image" src="https://github.com/user-attachments/assets/cc5bf59d-1581-4212-aa1e-e103ce50f5c8" />
+   
+   - 생성된 뉴스 레터 화면
+
+     <img width="629" alt="image" src="https://github.com/user-attachments/assets/940b7e73-aa3b-45f5-a056-cd3cd6638019" />
+
+
 ## Confluence API 토큰 생성 방법
 
 1. Atlassian 계정으로 로그인
