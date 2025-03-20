@@ -1,109 +1,93 @@
-# Confluence 뉴스레터 생성기
+# 뉴스레터 생성기
 
-Confluence 페이지 ID를 입력하면 해당 페이지의 내용을 요약하여 뉴스레터 형식으로 생성해주는 웹 애플리케이션입니다.
+다양한 소스(Confluence, 웹)에서 정보를 수집하여 카테고리별 뉴스레터를 쉽게 생성할 수 있는 웹 애플리케이션입니다.
 
-## 기능 설명
+## 주요 기능
 
-- Confluence 페이지 ID 여러 개를 입력받아 각 페이지의 내용을 처리
-- 페이지 내에 'TL;DR' 섹션이 있으면 해당 내용을 요약으로 사용
-- 'TL;DR' 섹션이 없으면 페이지 첫 200자를 요약으로 사용
-- 각 페이지의 제목, 요약 내용, 원본 페이지 링크를 포함한 뉴스레터 생성
-- 생성된 뉴스레터는 Outlook 이메일에 복사하여 사용 가능
+### 1. 다중 카테고리 지원
+- **News**: 최신 소식 및 공지사항
+- **Knowledge**: 지식 공유 및 참고 자료
+- **Guide**: 가이드 및 튜토리얼
 
-## 설치 방법
+### 2. 다양한 소스 지원
+- **Confluence**: Confluence 페이지 ID 기반 정보 수집
+  - TL;DR 내용 자동 감지 및 요약 제공
+  - 바로가기 링크 생성
+- **Web**: URL 기반 웹 페이지 정보 스크래핑
+  - 페이지 제목 및 설명 추출
+  - 날짜 형식 [YY. MM. DD] 자동 추가
 
-1. Python 3.9 이상 설치
-   - 이 프로젝트는 Python 3.9 이상의 버전이 필요합니다.
-   - [Python 다운로드 페이지](https://www.python.org/downloads/)
+### 3. 복사 기능
+- **항목별 복사**: 각 항목을 HTML 포맷(서식 유지)으로 복사
+- **전체 복사**: 카테고리별로 정리된 전체 뉴스레터 복사
+- **Confluence/Outlook 호환**: 복사된 내용을 Confluence나 Outlook에 붙여넣을 때 서식과 링크 유지
 
-2. 저장소 클론 또는 다운로드
-   ```
-   git clone [저장소 URL]
-   cd [프로젝트 폴더]
-   ```
+## 기술 스택
 
-3. 가상 환경 생성 및 활성화 (선택사항)
-   ```
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   ```
+- **백엔드**: Flask (Python)
+- **외부 라이브러리**:
+  - Atlassian Python API (Confluence 연동)
+  - BeautifulSoup4 (HTML 파싱)
+  - Requests (웹 페이지 요청)
+  - python-dotenv (환경 변수 관리)
+- **프론트엔드**: HTML, CSS, JavaScript
 
-3. 필요한 패키지 설치
-   ```
-   pip install -r requirements.txt
-   ```
+## 설치 및 실행 방법
 
-4. 환경 변수 설정
-   - 프로젝트에 포함된 `.env.example` 파일을 `.env`로 복사
-   ```
-   cp .env.example .env  # Windows: copy .env.example .env
-   ```
-   - `.env` 파일을 열고 다음 변수를 자신의 환경에 맞게 수정:
-     ```
-     CONFLUENCE_URL=https://altimedia.atlassian.net/wiki
-     CONFLUENCE_USERNAME=id@domain.com
-     CONFLUENCE_API_TOKEN=<your-api-key>
-     ```
-
-## 디렉토리 구조
-
+1. 저장소 클론
+```bash
+git clone [repository_url]
+cd newsletter-generator
 ```
-뉴스레터-생성기/
-├── app.py              # 메인 애플리케이션 코드
-├── requirements.txt    # 필요한 패키지 목록
-├── .env.example        # 환경 변수 예시 파일
-├── .env                # 실제 환경 변수 (생성 필요)
-└── templates/
-    ├── index.html      # 메인 페이지 템플릿
-    └── result.html     # 결과 페이지 템플릿
+
+2. 필요한 라이브러리 설치
+```bash
+pip install -r requirements.txt
+```
+
+3. 환경 변수 설정
+`.env` 파일을 생성하고 다음 내용 추가:
+```
+CONFLUENCE_URL=https://your-confluence-instance.atlassian.net
+CONFLUENCE_USERNAME=your_email@example.com
+CONFLUENCE_API_TOKEN=your_api_token
+```
+
+4. 애플리케이션 실행
+```bash
+python app.py
+```
+
+5. 웹 브라우저에서 접속
+```
+http://localhost:5000
 ```
 
 ## 사용 방법
 
-1. 애플리케이션 실행
-   ```
-   python app.py
-   ```
+1. 카테고리별 항목 입력
+   - 항목 유형(Web/Confluence) 선택
+   - URL 또는 Confluence 페이지 ID 입력
+   - "+" 버튼으로 항목 추가
 
-2. 웹 브라우저에서 접속
-   - 로컬 접속: http://127.0.0.1:5000
-   - 동일 네트워크 내 접속: http://[서버IP]:5000
-   - 기본적으로 모든 네트워크 인터페이스(0.0.0.0)에서 요청을 수신합니다.
+2. "생성하기" 버튼 클릭
 
-3. Confluence 페이지 ID 입력
-   - 한 줄에 하나씩 Confluence 페이지 ID 입력
-   - 예시:
-     ```
-     3840082544
-     3840049779
-     ```
+3. 결과 확인 및 복사
+   - 개별 항목 복사: "항목 복사" 버튼 클릭
+   - 전체 뉴스레터 복사: "전체 내용 복사" 버튼 클릭
 
-4. "뉴스레터 생성" 버튼 클릭
+4. Confluence 또는 이메일에 붙여넣기
 
-5. 생성된 뉴스레터 내용을 복사하여 Outlook 또는 다른 메일 클라이언트에 붙여넣기
+## 최근 업데이트
 
-## 실행 모습
-   - 뉴스레터 입력 화면
-   
-     <img width="961" alt="image" src="https://github.com/user-attachments/assets/cc5bf59d-1581-4212-aa1e-e103ce50f5c8" />
-   
-   - 생성된 뉴스 레터 화면
+- 카테고리별 항목 입력 기능 추가
+- Web/Confluence 구분 기능 추가
+- Web 스크래핑 기능 구현
+- HTML 포맷 유지 복사 기능 개선
+- 브라우저 호환성 향상
 
-     <img width="629" alt="image" src="https://github.com/user-attachments/assets/940b7e73-aa3b-45f5-a056-cd3cd6638019" />
+## 참고 사항
 
-
-## Confluence API 토큰 생성 방법
-
-1. Atlassian 계정으로 로그인
-2. 프로필 > 계정 설정 > 보안 > API 토큰 생성
-3. 토큰 이름 지정 후 토큰 생성
-4. 생성된 토큰을 `.env` 파일의 `CONFLUENCE_API_TOKEN` 값으로 사용
-
-## 문제 해결
-
-- 페이지 ID가 올바르지 않은 경우 오류 메시지가 표시됩니다.
-- 서버 실행 중 문제가 발생할 경우 콘솔 로그를 확인하세요.
-- Confluence API 연결 문제가 있을 경우 환경 변수를 확인하세요.
-- 네트워크 접속 문제가 있는 경우:
-  - 방화벽 설정에서 5000 포트가 허용되어 있는지 확인하세요.
-  - `0.0.0.0` 바인딩은 모든 네트워크 인터페이스에서 접속을 허용합니다.
+- Confluence API 토큰은 Atlassian 계정에서 생성해야 합니다.
+- Web 스크래핑 기능은 웹사이트의 구조에 따라 결과가 달라질 수 있습니다.
+- 일부 웹사이트는 스크래핑을 제한할 수 있으니 이용 약관을 확인하세요.
