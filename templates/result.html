@@ -3,64 +3,316 @@
 <head>
     <title>뉴스레터 결과</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            line-height: 1.6;
-        }
-        .newsletter {
-            border: 1px solid #ddd;
-            padding: 20px;
-            background-color: #f9f9f9;
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .category { margin-bottom: 30px; }
+        .category-header { background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .item { margin-bottom: 15px; border: 1px solid #ddd; padding: 15px; border-radius: 5px; position: relative; }
+        .title { font-weight: bold; font-size: 18px; margin-bottom: 10px; }
+        .summary { color: #555; margin-bottom: 10px; line-height: 1.5; }
+        .link { display: inline-block; color: #1a0dab; text-decoration: none; padding: 5px 10px; border: 1px solid #1a0dab; border-radius: 4px; margin-right: 10px; }
+        .link:hover { background-color: #1a0dab; color: white; }
+        h1, h2 { color: #333; }
+        h2 { padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .back-button { margin-top: 20px; display: inline-block; padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px; }
+        .back-button:hover { background-color: #45a049; }
+        .no-items { font-style: italic; color: #777; }
+        .copy-button { padding: 5px 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .copy-button:hover { background-color: #5a6268; }
+        .copy-all-button { margin-left: 10px; padding: 5px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .copy-all-button:hover { background-color: #0069d9; }
+        .button-group { margin-top: 15px; display: flex; }
+        .copy-success { position: absolute; top: 10px; right: 10px; background-color: rgba(40, 167, 69, 0.9); color: white; padding: 5px 10px; border-radius: 4px; display: none; }
+        .hidden-content { position: absolute; left: -9999px; height: 1px; width: 1px; overflow: hidden; }
+        .options { margin-bottom: 15px; }
+        /* 전체 뉴스레터 섹션을 위한 스타일 */
+        .newsletter-container { 
+            border: 1px solid #ddd; 
+            padding: 20px; 
+            margin-bottom: 20px; 
             border-radius: 5px;
+            background-color: #f9f9f9;
         }
-        .item {
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        h1 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #34495e;
-            font-size: 18px;
-            margin: 0 0 10px 0;
-        }
-        p {
-            color: #555;
-            font-size: 14px;
-            margin: 0 0 10px 0;
-        }
-        a {
-            color: #2980b9;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .footer {
-            font-size: 12px;
-            color: #777;
-            margin-top: 20px;
+        .copy-all-success {
+            display: none;
+            padding: 10px;
+            background-color: rgba(40, 167, 69, 0.9);
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="newsletter">
-        <h1>이번 주 AI 뉴스레터</h1>
-        {% for item in summaries %}
-        <div class="item">
-            <h2>{{ item.title }}</h2>
+    <h1>뉴스레터 결과</h1>
+    
+    <div class="options">
+        <strong>전체 뉴스레터 복사:</strong>
+        <button id="copy-all-button" class="copy-all-button">전체 내용 복사</button>
+        <span id="copy-all-success" class="copy-all-success">복사 완료!</span>
+    </div>
+    
+<div class="hidden-content" id="full-newsletter">
+        <h1>📰 주간 뉴스레터</h1>
+        
+        <!-- 뉴스 섹션 -->
+        {% if summaries|selectattr('category', 'equalto', 'News')|list %}
+        <h2>📣 News</h2>
+        {% for item in summaries if item.category == 'News' %}
+        <div>
+            <h3>{{ item.title }}</h3>
             <p>{{ item.summary }}</p>
-            <a href="{{ item.link }}" target="_blank">더보기</a>
+            <p><a href="{{ item.link }}">바로가기</a></p>
         </div>
         {% endfor %}
+        {% endif %}
+        
+        <!-- Knowledge 섹션 -->
+        {% if summaries|selectattr('category', 'equalto', 'Knowledge')|list %}
+        <h2>📚 Knowledge</h2>
+        {% for item in summaries if item.category == 'Knowledge' %}
+        <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.summary }}</p>
+            <p><a href="{{ item.link }}">바로가기</a></p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        <!-- Guide 섹션 -->
+        {% if summaries|selectattr('category', 'equalto', 'Guide')|list %}
+        <h2>📝 Guide</h2>
+        {% for item in summaries if item.category == 'Guide' %}
+        <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.summary }}</p>
+            <p><a href="{{ item.link }}">바로가기</a></p>
+        </div>
+        {% endfor %}
+        {% endif %}
     </div>
-    <p class="footer">위 내용을 복사하여 Outlook에 붙여넣으세요!</p>
+
+    <div class="category">
+        <h2 class="category-header">News</h2>
+        {% for item in summaries if item.category == 'News' %}
+        <div class="item" id="item-news-{{ loop.index }}">
+            <div class="title">{{ item.title }}</div>
+            <div class="summary">{{ item.summary }}</div>
+            <div class="button-group">
+                <a href="{{ item.link }}" class="link" target="_blank">바로가기</a>
+                <button class="copy-button" onclick="copyItem('news-{{ loop.index }}')">항목 복사</button>
+            </div>
+            <div class="copy-success" id="copy-success-news-{{ loop.index }}">복사 완료!</div>
+            
+            <!-- 복사용 숨겨진 콘텐츠 -->
+            <div class="hidden-content" id="copy-content-news-{{ loop.index }}">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.summary }}</p>
+                <p><a href="{{ item.link }}">바로가기</a></p>
+            </div>
+        </div>
+        {% else %}
+        <p class="no-items">News 항목이 없습니다.</p>
+        {% endfor %}
+    </div>
+
+    <div class="category">
+        <h2 class="category-header">Knowledge</h2>
+        {% for item in summaries if item.category == 'Knowledge' %}
+        <div class="item" id="item-knowledge-{{ loop.index }}">
+            <div class="title">{{ item.title }}</div>
+            <div class="summary">{{ item.summary }}</div>
+            <div class="button-group">
+                <a href="{{ item.link }}" class="link" target="_blank">바로가기</a>
+                <button class="copy-button" onclick="copyItem('knowledge-{{ loop.index }}')">항목 복사</button>
+            </div>
+            <div class="copy-success" id="copy-success-knowledge-{{ loop.index }}">복사 완료!</div>
+            
+            <!-- 복사용 숨겨진 콘텐츠 -->
+            <div class="hidden-content" id="copy-content-knowledge-{{ loop.index }}">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.summary }}</p>
+                <p><a href="{{ item.link }}">바로가기</a></p>
+            </div>
+        </div>
+        {% else %}
+        <p class="no-items">Knowledge 항목이 없습니다.</p>
+        {% endfor %}
+    </div>
+
+    <div class="category">
+        <h2 class="category-header">Guide</h2>
+        {% for item in summaries if item.category == 'Guide' %}
+        <div class="item" id="item-guide-{{ loop.index }}">
+            <div class="title">{{ item.title }}</div>
+            <div class="summary">{{ item.summary }}</div>
+            <div class="button-group">
+                <a href="{{ item.link }}" class="link" target="_blank">바로가기</a>
+                <button class="copy-button" onclick="copyItem('guide-{{ loop.index }}')">항목 복사</button>
+            </div>
+            <div class="copy-success" id="copy-success-guide-{{ loop.index }}">복사 완료!</div>
+            
+            <!-- 복사용 숨겨진 콘텐츠 -->
+            <div class="hidden-content" id="copy-content-guide-{{ loop.index }}">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.summary }}</p>
+                <p><a href="{{ item.link }}">바로가기</a></p>
+            </div>
+        </div>
+        {% else %}
+        <p class="no-items">Guide 항목이 없습니다.</p>
+        {% endfor %}
+    </div>
+
+    <a href="/" class="back-button">다시 작성하기</a>
+
+    <script>
+        // 브라우저 기능 탐지
+        const hasClipboardAPI = navigator.clipboard !== undefined;
+        const hasClipboardWriteAPI = hasClipboardAPI && typeof navigator.clipboard.write === 'function';
+        const hasClipboardItemAPI = window.ClipboardItem !== undefined;
+        
+        // 서식있는 HTML 복사 함수
+        async function copyRichText(html, text, successCallback, errorCallback) {
+            // 최신 ClipboardItem API 지원 확인
+            if (hasClipboardWriteAPI && hasClipboardItemAPI) {
+                try {
+                    const clipboardItem = new ClipboardItem({
+                        'text/html': new Blob([html], { type: 'text/html' }),
+                        'text/plain': new Blob([text], { type: 'text/plain' })
+                    });
+                    
+                    await navigator.clipboard.write([clipboardItem]);
+                    successCallback();
+                    return true;
+                } catch (err) {
+                    console.warn('Clipboard HTML 복사 실패:', err);
+                    // 오류 발생 시 다음 방법 시도
+                }
+            }
+            
+            // 일반 텍스트 복사 시도
+            if (hasClipboardAPI) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    successCallback();
+                    return true;
+                } catch (err) {
+                    console.warn('Clipboard 텍스트 복사 실패:', err);
+                }
+            }
+            
+            // document.execCommand 방식 시도
+            try {
+                // 임시 컨테이너 생성
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = html;
+                tempContainer.style.position = 'fixed';
+                tempContainer.style.top = '0';
+                tempContainer.style.opacity = '0';
+                document.body.appendChild(tempContainer);
+                
+                // 선택 및 복사
+                const range = document.createRange();
+                range.selectNodeContents(tempContainer);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                const successful = document.execCommand('copy');
+                document.body.removeChild(tempContainer);
+                
+                if (successful) {
+                    successCallback();
+                    return true;
+                }
+            } catch (err) {
+                console.warn('execCommand 복사 실패:', err);
+            }
+            
+            // 모든 방법 실패 시
+            errorCallback();
+            return false;
+        }
+        
+        // 개별 항목 복사 함수
+        function copyItem(id) {
+            const content = document.getElementById(`copy-content-${id}`);
+            const successNotice = document.getElementById(`copy-success-${id}`);
+            
+            copyRichText(
+                content.innerHTML,
+                content.innerText,
+                () => {
+                    // 복사 성공 알림 표시
+                    successNotice.style.display = 'block';
+                    setTimeout(() => {
+                        successNotice.style.display = 'none';
+                    }, 2000);
+                },
+                () => {
+                    // 모든 복사 방법이 실패한 경우
+                    alert('자동 복사가 실패했습니다. 해당 내용을 직접 선택하여 복사해주세요.');
+                    
+                    // 사용자가 직접 복사할 수 있도록 내용 표시
+                    const tempDisplay = document.createElement('div');
+                    tempDisplay.innerHTML = content.innerHTML;
+                    tempDisplay.style.padding = '15px';
+                    tempDisplay.style.border = '1px solid #ccc';
+                    tempDisplay.style.backgroundColor = '#f9f9f9';
+                    tempDisplay.style.margin = '10px 0';
+                    tempDisplay.style.borderRadius = '5px';
+                    
+                    // 원본 항목 아래에 표시
+                    const item = document.getElementById(`item-${id}`);
+                    item.appendChild(tempDisplay);
+                    
+                    // 표시된 내용 선택
+                    const range = document.createRange();
+                    range.selectNodeContents(tempDisplay);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            );
+        }
+        
+        // 전체 뉴스레터 복사 함수
+        document.getElementById('copy-all-button').addEventListener('click', function() {
+            const fullNewsletter = document.getElementById('full-newsletter');
+            const successNotice = document.getElementById('copy-all-success');
+            
+            copyRichText(
+                fullNewsletter.innerHTML,
+                fullNewsletter.innerText,
+                () => {
+                    // 복사 성공 알림 표시
+                    successNotice.style.display = 'block';
+                    setTimeout(() => {
+                        successNotice.style.display = 'none';
+                    }, 2000);
+                },
+                () => {
+                    // 모든 복사 방법이 실패한 경우
+                    alert('자동 복사가 실패했습니다. 아래 내용을 직접 선택하여 복사해주세요.');
+                    
+                    // 사용자가 직접 복사할 수 있도록 내용 표시
+                    const newsletterContainer = document.createElement('div');
+                    newsletterContainer.className = 'newsletter-container';
+                    newsletterContainer.innerHTML = fullNewsletter.innerHTML;
+                    
+                    // 버튼 아래에 표시
+                    const optionsDiv = document.querySelector('.options');
+                    optionsDiv.parentNode.insertBefore(newsletterContainer, optionsDiv.nextSibling);
+                    
+                    // 표시된 내용 선택
+                    const range = document.createRange();
+                    range.selectNodeContents(newsletterContainer);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            );
+        });
+    </script>
 </body>
 </html>
